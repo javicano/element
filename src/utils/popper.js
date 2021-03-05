@@ -1053,7 +1053,9 @@
     function getScrollParent(element) {
         var parent = element.parentNode;
 
-        if (!parent) {
+        // z-element: Fix Web Component popover and tooltip issue
+        //   https://github.com/ElemeFE/element/issues/20006
+        if (!parent || parent.nodeType === 11) {
             return element;
         }
 
@@ -1090,7 +1092,9 @@
      * @returns {Boolean} answer to "isFixed?"
      */
     function isFixed(element) {
-        if (element === root.document.body) {
+        // z-element: Fix Web Component popover and tooltip issue
+        //   https://github.com/ElemeFE/element/issues/20006
+        if (element === root.document.body || element.nodeType === 11) {
             return false;
         }
         if (getStyleComputedProperty(element, 'position') === 'fixed') {
