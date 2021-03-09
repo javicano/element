@@ -354,7 +354,9 @@
       handleInput(event) {
         // should not emit input during composition
         // see: https://github.com/ElemeFE/element/issues/10516
-        if (this.isComposing) return;
+        
+        // z-element: Fix Mobile gBoard Compatibility for filterable components. Likely it generates problems with CJK IMEs
+        // if (this.isComposing) return;
 
         // hack for https://github.com/ElemeFE/element/issues/8548
         // should remove the following line when we don't support IE

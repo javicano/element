@@ -126,6 +126,14 @@ export const isFirefox = function() {
   return !Vue.prototype.$isServer && !!window.navigator.userAgent.match(/firefox/i);
 };
 
+// z-element: isIosSafari
+export const isIosSafari = function() {
+  const userAgent = window.navigator.userAgent;
+  const iOS = !!userAgent.match(/iPad/i) || !!userAgent.match(/iPhone/i);
+  const webkit = !!userAgent.match(/WebKit/i);
+  return !Vue.prototype.$isServer && iOS && webkit && !userAgent.match(/CriOS/i);
+};
+
 export const autoprefixer = function(style) {
   if (typeof style !== 'object') return style;
   const rules = ['transform', 'transition', 'animation'];

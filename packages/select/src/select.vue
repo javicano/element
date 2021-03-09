@@ -145,9 +145,8 @@
   import debounce from 'throttle-debounce/debounce';
   import Clickoutside from 'element-ui/src/utils/clickoutside';
   import { addResizeListener, removeResizeListener } from 'element-ui/src/utils/resize-event';
-  import { t } from 'element-ui/src/locale';
   import scrollIntoView from 'element-ui/src/utils/scroll-into-view';
-  import { getValueByPath, valueEquals, isIE, isEdge } from 'element-ui/src/utils/util';
+  import { getValueByPath, valueEquals, isIE, isEdge, isIosSafari } from 'element-ui/src/utils/util';
   import NavigationMixin from './navigation-mixin';
   import { isKorean } from 'element-ui/src/utils/shared';
 
@@ -180,7 +179,8 @@
       },
 
       readonly() {
-        return !this.filterable || this.multiple || (!isIE() && !isEdge() && !this.visible);
+        // z-element: Fix iOS Mobile Compatibility: Show soft keyboard
+        return !this.filterable || this.multiple || (!isIE() && !isEdge() && !isIosSafari() && !this.visible);
       },
 
       showClose() {
@@ -235,6 +235,9 @@
         return ['small', 'mini'].indexOf(this.selectSize) > -1
           ? 'mini'
           : 'small';
+      },
+      propPlaceholder() {
+        return typeof this.placeholder !== 'undefined' ? this.placeholder : this.t('el.select.placeholder');
       }
     },
 
@@ -288,9 +291,7 @@
       },
       placeholder: {
         type: String,
-        default() {
-          return t('el.select.placeholder');
-        }
+        required: false
       },
       defaultFirstOption: Boolean,
       reserveKeyword: Boolean,
@@ -339,7 +340,7 @@
         });
       },
 
-      placeholder(val) {
+      propPlaceholder(val) {
         this.cachedPlaceHolder = this.currentPlaceholder = val;
       },
 
@@ -838,7 +839,7 @@
     },
 
     created() {
-      this.cachedPlaceHolder = this.currentPlaceholder = this.placeholder;
+      this.cachedPlaceHolder = this.currentPlaceholder = this.propPlaceholder;
       if (this.multiple && !Array.isArray(this.value)) {
         this.$emit('input', []);
       }
